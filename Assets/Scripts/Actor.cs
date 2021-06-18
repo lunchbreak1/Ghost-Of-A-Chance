@@ -15,7 +15,7 @@ public abstract class Actor : MonoBehaviour
     protected SpriteResolver resolver; // This actor's sprite resolver
     protected AudioSource audio; // This actor's audio source
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         body = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
