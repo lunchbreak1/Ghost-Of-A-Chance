@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// A Mover is any object that can move
 public abstract class Mover : Actor
 {
     [SerializeField]
