@@ -5,7 +5,22 @@ using UnityEngine;
 // This class controls the playable character Bruno
 public class Player : Mover
 {
-    public KeyCode leftKey, rightKey, upKey, downKey, phaseKey; // The different keys the player can press to control Bruno
+    [SerializeField]
+    [Range(0, 20)]
+    private float phaseDuration, // how long Bruno remains phased
+        phaseRechargeTime, // how long it takes Bruno's phase ability to recharge
+        invincibility; // how long Bruno stays invincible after being hurt
+
+    [SerializeField]
+    private bool canPhase, // whether or not Bruno is able to phase
+                 phased, // when Bruno is phased, he can pass through solid objects
+                 hurt; // if Bruno is hurt, then he can't get hit again for a few seconds
+
+    [SerializeField]
+    private KeyCode leftKey, rightKey, upKey, downKey, phaseKey; // The different keys the player can press to control Bruno
+
+
+
 
     // Update is called once per frame
     void Update()
@@ -42,5 +57,23 @@ public class Player : Mover
     void Phase()
     {
         Debug.Log("Phase!");
+    }
+
+    // Revert back to normal from phase
+    void Revert()
+    {
+        Debug.Log("Revert!");
+    }
+
+    // Restore Bruno's ability to phase
+    void ReadyPhase()
+    {
+        Debug.Log("Ready!");
+    }
+
+    // End Bruno's period of invincibility
+    void EndInvincibility()
+    {
+        Debug.Log("End Invincibility!");
     }
 }
