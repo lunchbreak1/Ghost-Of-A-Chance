@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 // This class controls the playable character Bruno
 public class Player : Mover
 {
     [SerializeField]
-    [Range(0, 20)]
+    [Range(0, 5)]
     private float phaseDuration, // how long Bruno remains phased
         phaseRechargeTime, // how long it takes Bruno's phase ability to recharge
         invincibility; // how long Bruno stays invincible after being hurt
@@ -16,53 +17,58 @@ public class Player : Mover
                  phased, // when Bruno is phased, he can pass through solid objects
                  hurt; // if Bruno is hurt, then he can't get hit again for a few seconds
 
-    [SerializeField]
-    private KeyCode leftKey, rightKey, upKey, downKey, phaseKey; // The different keys the player can press to control Bruno
+    private SpriteRenderer spriteRenderer;
+    private Color solidColor, ghostlyColor;
 
-
-
-
-    // Update is called once per frame
+    // The vector of the player's movement
+    private Vector2 movementVector;
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        solidColor = spriteRenderer.color;
+        ghostlyColor = solidColor;
+        ghostlyColor.a *= .5f;
+    }
     void Update()
     {
-        PlayerMove();
+        Move(movementVector);
     }
 
-    // Move the player using the input keys
-    void PlayerMove()
+    private void OnMove(InputValue movementValue) //get the value of the user input
     {
-        if (Input.GetKey(leftKey))
+        movementVector = movementValue.Get<Vector2>();
+
+        if(movementVector.x > 0)
         {
-            MoveLeft();
+            FaceRight();
         }
-        if (Input.GetKey(rightKey))
+        else if(movementVector.x < 0)
         {
-            MoveRight();
-        }
-        if (Input.GetKey(upKey))
-        {
-            MoveUp();
-        }
-        if (Input.GetKey(downKey))
-        {
-            MoveDown();
-        }
-        if (Input.GetKey(phaseKey))
-        {
-            Phase();
+            FaceLeft();
         }
     }
 
     // Phase and turn intangible for a brief duration
-    void Phase()
+    void OnPhase()
     {
-        Debug.Log("Phase!");
+        if(phased)
+        {
+            Revert();
+            return;
+        }
+        phased = true;
+        gameObject.layer = LayerMask.NameToLayer("Phased");
+        spriteRenderer.color = ghostlyColor;
     }
 
     // Revert back to normal from phase
     void Revert()
     {
-        Debug.Log("Revert!");
+        phased = false;
+       // remainingCooldown = cooldownLength - remainingGhostly;
+       // remainingGhostly = ghostlyLength;
+        gameObject.layer = LayerMask.NameToLayer("Player");
+        spriteRenderer.color = solidColor;
     }
 
     // Restore Bruno's ability to phase
