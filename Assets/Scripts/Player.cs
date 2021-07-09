@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 // This class controls the playable character Bruno
-public class Player : Mover
+public class Player : Mover, IDamageable
 {
     [SerializeField]
     [Range(0, 5)]
@@ -81,5 +81,38 @@ public class Player : Mover
     void EndInvincibility()
     {
         Debug.Log("End Invincibility!");
+    }
+
+    public void TakeDamage()
+    {
+        GameManager.instance.currentHP--;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        string tag = collision.gameObject.tag;
+        switch (tag)
+        {
+            case "Hazard":
+                if (!hurt)
+                {
+                    TakeDamage();
+                }
+                break;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        string tag = collision.gameObject.tag;
+        switch (tag)
+        {
+            case "Hazard":
+                if (!hurt)
+                {
+                    TakeDamage();
+                }
+                break;
+        }
     }
 }

@@ -12,13 +12,14 @@ public abstract class Mover : Actor
     protected Facing facing;
 
     // Face the object left
-    protected void FaceLeft()
+
+    public void FaceLeft()
     {
         facing = Facing.Left;
     }
 
     // Face the object right
-    protected void FaceRight()
+    public void FaceRight()
     {
         facing = Facing.Right;
     }
